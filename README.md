@@ -15,7 +15,8 @@ SERVER_ADDRESS=0.0.0.0:8080
 GIN_MODE=debug
 ```
 ### Database initialization
-```
+Sample postgresql query to instantiate database schema.
+```sql
 DROP TABLE IF EXISTS users CASCADE;
 
 CREATE TABLE users (
