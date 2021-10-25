@@ -13,11 +13,15 @@ func NewRouter() *gin.Engine {
 	config := config.Read()
 	gin.SetMode(config.GinMode)
 
-	// set routing paths
+	// router paths
 	v1 := router.Group("v1")
 	{
-		account := new(controllers.AccountController)
-		v1.GET("/accounts/:id", account.GetByID)
+		user := new(controllers.UserController)
+		v1.GET("/users/:id", user.GetByID)
+		v1.GET("/users", user.GetAll)
+		//v1.POST("/users", user.Create)
+		//v1.PUT("/users/:id", user.Update)
+		//v1.DELETE("/users/:id", user.Delete)
 	}
 
 	return router
