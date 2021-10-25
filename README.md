@@ -14,3 +14,22 @@ DB_SOURCE=postgres://root:password@localhost:5432/root?sslmode=disable
 SERVER_ADDRESS=0.0.0.0:8080
 GIN_MODE=debug
 ```
+### Database initialization
+```
+DROP TABLE IF EXISTS users CASCADE;
+
+CREATE TABLE users (
+    "user_id"        BIGSERIAL PRIMARY KEY,
+    "username"       	VARCHAR(40) NOT NULL,
+    "password"       	VARCHAR(40) NOT NULL,
+    "email" 			VARCHAR(256),
+    "created_at"      	TIMESTAMP NOT NULL DEFAULT(now())
+);
+
+INSERT INTO users("username", "password", "email")
+VALUES 	('Mario', 'passgancipass', 'ganci@gmail.com'),
+		('Johnny', 'john123', 'johnny@gmail.com'),
+		('Donald Trump', 'trumpyboy', 'trump@hotmail.com'),
+		('Obama', 'barackog44', 'obama@gmail.com')
+RETURNING *;
+```
