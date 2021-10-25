@@ -1,1 +1,16 @@
 # user-service
+Microservice used for retrieving and manipulating user data.
+
+### Docker commands for postgres
+- Run postgres image in container: `docker run --name image_name -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=password -d postgres` 
+- Stop postgres container: `docker stop image_name`
+- Opens postgres in terminal: `docker exec -t image_name psql -U root`
+
+### Environment file
+In your local repository add `app.env` file.
+```
+DB_DRIVER=postgres
+DB_SOURCE=postgres://root:password@localhost:5432/root?sslmode=disable
+SERVER_ADDRESS=0.0.0.0:8080
+GIN_MODE=debug
+```
