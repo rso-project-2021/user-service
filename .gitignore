@@ -83,4 +83,4 @@ Temporary Items
 .apdisk
 
 # Custom added
-.env
+*.env
