@@ -1,6 +1,8 @@
 package models
 
 import (
+	"context"
+	"log"
 	"user-service/db"
 )
 
@@ -12,7 +14,24 @@ type User struct {
 	CreatedAt string `json:"created_at" db:"created_at"`
 }
 
-func (u User) GetByID(id string) (user User, err error) {
+type CreateUserParam struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Email    string `json:"email"`
+}
+
+type UpdateUserParam struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Email    string `json:"email"`
+}
+
+type ListUserParam struct {
+	Offset int32 `json:"limit"`
+	Limit  int32 `json:"offset"`
+}
+
+func (u User) GetByID(id int64) (user User, err error) {
 	db := db.GetDB()
 
 	// get user by ID
@@ -20,22 +39,81 @@ func (u User) GetByID(id string) (user User, err error) {
 	err = db.Get(&user, query, id)
 
 	if err != nil {
-		panic(err)
+		return
 	}
 
 	return
 }
 
-func (u User) GetAll() (user []User, err error) {
+func (u User) GetAll(ctx context.Context, arg ListUserParam) (users []User, err error) {
 	db := db.GetDB()
 
-	// get list of users
-	query := `SELECT * FROM "users"`
-	err = db.Select(&user, query)
-
+	query := `SELECT * FROM "users" OFFSET $1 LIMIT $2`
+	users = []User{}
+	err = db.SelectContext(ctx, &users, query, arg.Offset, arg.Limit)
 	if err != nil {
-		panic(err)
+		log.Fatal("nc najdu")
+		return
 	}
 
 	return
+}
+
+func (u User) Create(ctx context.Context, arg CreateUserParam) (User, error) {
+	db := db.GetDB()
+
+	query := `
+	INSERT INTO "users"("username", "password", "email") 
+	VALUES ($1, $2, $3)
+	RETURNING "user_id", "username", "password", "email", "created_at"
+	`
+	row := db.QueryRowContext(ctx, query, arg.Username, arg.Password, arg.Email)
+
+	var user User
+	err := row.Scan(
+		&user.ID,
+		&user.Username,
+		&user.Password,
+		&user.Email,
+		&user.CreatedAt,
+	)
+
+	return user, err
+}
+
+func (u User) Update(ctx context.Context, arg UpdateUserParam, id int64) (User, error) {
+	db := db.GetDB()
+
+	query := `
+	UPDATE "users"
+	SET "username" = $2,
+		"password" = $3,
+		"email"    = $4
+	WHERE "user_id" = $1
+	RETURNING "user_id", "username", "password", "email", "created_at"
+	`
+	row := db.QueryRowContext(ctx, query, id, arg.Username, arg.Password, arg.Email)
+
+	var user User
+	err := row.Scan(
+		&user.ID,
+		&user.Username,
+		&user.Password,
+		&user.Email,
+		&user.CreatedAt,
+	)
+
+	return user, err
+}
+
+func (u User) Delete(ctx context.Context, id int64) error {
+	db := db.GetDB()
+
+	query := `
+	DELETE FROM users
+	WHERE "user_id" = $1
+	`
+	_, err := db.ExecContext(ctx, query, id)
+
+	return err
 }
