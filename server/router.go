@@ -13,7 +13,7 @@ func NewRouter() *gin.Engine {
 	config := config.Read()
 	gin.SetMode(config.GinMode)
 
-	// router paths
+	// Expose router paths.
 	v1 := router.Group("v1")
 	{
 		user := new(controllers.UserController)

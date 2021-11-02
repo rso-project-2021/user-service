@@ -8,14 +8,15 @@ import (
 )
 
 func main() {
-	// load configuration
+
+	// Load configuration settings.
 	if err := config.Load("."); err != nil {
-		log.Fatal("Failed to load config:", err)
+		log.Fatal("Failed to load config: ", err)
 	}
 
-	// connect to database
+	// Connect to the database.
 	if err := db.Connect(); err != nil {
-		log.Fatal("Failed to connect to database:", err)
+		log.Fatal("Failed to connect to database: ", err)
 	}
 
 	server.Start()

@@ -2,7 +2,6 @@ package models
 
 import (
 	"context"
-	"log"
 	"user-service/db"
 )
 
@@ -15,32 +14,27 @@ type User struct {
 }
 
 type CreateUserParam struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Email    string `json:"email"`
+	Username string
+	Password string
+	Email    string
 }
 
 type UpdateUserParam struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Email    string `json:"email"`
+	Username string
+	Password string
+	Email    string
 }
 
 type ListUserParam struct {
-	Offset int32 `json:"limit"`
-	Limit  int32 `json:"offset"`
+	Offset int32
+	Limit  int32
 }
 
-func (u User) GetByID(id int64) (user User, err error) {
+func (u User) GetByID(ctx context.Context, id int64) (user User, err error) {
 	db := db.GetDB()
 
-	// get user by ID
-	query := `SELECT * FROM "users" WHERE "user_id" = $1`
-	err = db.Get(&user, query, id)
-
-	if err != nil {
-		return
-	}
+	const query = `SELECT * FROM "users" WHERE "user_id" = $1`
+	err = db.GetContext(ctx, &user, query, id)
 
 	return
 }
@@ -48,13 +42,9 @@ func (u User) GetByID(id int64) (user User, err error) {
 func (u User) GetAll(ctx context.Context, arg ListUserParam) (users []User, err error) {
 	db := db.GetDB()
 
-	query := `SELECT * FROM "users" OFFSET $1 LIMIT $2`
+	const query = `SELECT * FROM "users" OFFSET $1 LIMIT $2`
 	users = []User{}
 	err = db.SelectContext(ctx, &users, query, arg.Offset, arg.Limit)
-	if err != nil {
-		log.Fatal("nc najdu")
-		return
-	}
 
 	return
 }
@@ -62,7 +52,7 @@ func (u User) GetAll(ctx context.Context, arg ListUserParam) (users []User, err 
 func (u User) Create(ctx context.Context, arg CreateUserParam) (User, error) {
 	db := db.GetDB()
 
-	query := `
+	const query = `
 	INSERT INTO "users"("username", "password", "email") 
 	VALUES ($1, $2, $3)
 	RETURNING "user_id", "username", "password", "email", "created_at"
@@ -84,7 +74,7 @@ func (u User) Create(ctx context.Context, arg CreateUserParam) (User, error) {
 func (u User) Update(ctx context.Context, arg UpdateUserParam, id int64) (User, error) {
 	db := db.GetDB()
 
-	query := `
+	const query = `
 	UPDATE "users"
 	SET "username" = $2,
 		"password" = $3,
@@ -109,7 +99,7 @@ func (u User) Update(ctx context.Context, arg UpdateUserParam, id int64) (User, 
 func (u User) Delete(ctx context.Context, id int64) error {
 	db := db.GetDB()
 
-	query := `
+	const query = `
 	DELETE FROM users
 	WHERE "user_id" = $1
 	`
