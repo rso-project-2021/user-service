@@ -14,6 +14,6 @@ migratedown:
 	migrate -path db/migration -database "postgres://root:password@localhost:5432/user_service?sslmode=disable" -verbose down
 
 test: 
-	go test -v -cover ./...
+	go test -cover ./...
 
 .PHONY: postgres, createdb, dropdb, migrateup, migratedown, test
