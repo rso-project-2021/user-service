@@ -1,36 +1,41 @@
 # user-service
-Microservice used for retrieving and manipulating user data.
+Microservice used for working with user data.
 
-### Docker commands for postgres
-- Run postgres image in container: `docker run --name image_name -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=password -d postgres` 
-- Stop postgres container: `docker stop image_name`
-- Opens postgres in terminal: `docker exec -t image_name psql -U root`
-
-### Environment file
-In your local repository add `app.env` file.
+## Environment file
+In root of your local repository add `app.env` file.
 ```
 DB_DRIVER=postgres
-DB_SOURCE=postgres://root:password@localhost:5432/root?sslmode=disable
+DB_SOURCE=postgres://root:password@localhost:5432/user_service?sslmode=disable
 SERVER_ADDRESS=0.0.0.0:8080
 GIN_MODE=debug
 ```
-### Database initialization
-Sample postgresql query to instantiate database schema.
+
+## Setup database
+1. Run `docker pull postgres` to download [postgres image](https://hub.docker.com/_/postgres).
+2. Run `make postgres` to run postgres image inside of container.
+3. Run `make createdb` to create postgres database.
+4. Run `make migrateup` to add "users" table.
+5. Test project with command `make test`.
+6. Run service with `go run`.
+
+## Seed database
+Populate database with some users. You can run this query in [TablePlus](https://tableplus.com/).
 ```sql
-DROP TABLE IF EXISTS users CASCADE;
-
-CREATE TABLE users (
-    "user_id"        BIGSERIAL PRIMARY KEY,
-    "username"       	VARCHAR(40) NOT NULL,
-    "password"       	VARCHAR(40) NOT NULL,
-    "email" 			VARCHAR(256),
-    "created_at"      	TIMESTAMP NOT NULL DEFAULT(now())
-);
-
 INSERT INTO users("username", "password", "email")
 VALUES 	('Mario', 'passgancipass', 'ganci@gmail.com'),
-		('Johnny', 'john123', 'johnny@gmail.com'),
-		('Donald Trump', 'trumpyboy', 'trump@hotmail.com'),
-		('Obama', 'barackog44', 'obama@gmail.com')
-RETURNING *;
+	('Johnny', 'john123', 'johnny@gmail.com'),
+	('Donald Trump', 'trumpyboy', 'trump@hotmail.com'),
+	('Obama', 'barackog44', 'obama@gmail.com');
 ```
+
+## Things to implement
+- [x] CRUD operations
+- [x] Database migrations
+- [x] CRUD unit tests
+- [x] Makefile
+- [ ] API unit tests
+- [ ] Health checks
+- [ ] Docker file
+- [ ] CI/CD github actions
+- [ ] Dockerhub
+- [ ] AWS account
