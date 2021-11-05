@@ -15,8 +15,10 @@ GIN_MODE=debug
 2. Run `make postgres` to run postgres image inside of container.
 3. Run `make createdb` to create postgres database.
 4. Run `make migrateup` to add "users" table.
-5. Test project with command `make test`.
-6. Run service with `go run`.
+5. Run `go mod tidy` to clean golang package dependecies.
+6. Test project with command `make test`.
+7. Run service with `go run .`.
+8. Use [PostMan](https://www.postman.com/) to send query to `http://localhost:8080/v1/users/1`.
 
 ## Seed database
 Populate database with some users. You can run this query in [TablePlus](https://tableplus.com/).
