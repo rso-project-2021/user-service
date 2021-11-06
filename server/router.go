@@ -1,17 +1,15 @@
 package server
 
 import (
-	"user-service/config"
 	"user-service/controllers"
 
 	"github.com/gin-gonic/gin"
 )
 
-func NewRouter() *gin.Engine {
+func NewRouter(ginMode string) *gin.Engine {
 
 	router := gin.Default()
-	config := config.Read()
-	gin.SetMode(config.GinMode)
+	gin.SetMode(ginMode)
 
 	// Expose router paths.
 	v1 := router.Group("v1")

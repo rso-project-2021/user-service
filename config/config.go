@@ -9,26 +9,18 @@ type Config struct {
 	GinMode       string `mapstructure:"GIN_MODE"`
 }
 
-var config Config
+// Reads configuration from file or environment variables.
+func LoadConfig(path string) (config Config, err error) {
 
-func Load(path string) (err error) {
-
-	// set viper parameters
 	viper.AddConfigPath(path)
 	viper.SetConfigName("app")
 	viper.SetConfigType("env")
 	viper.AutomaticEnv()
 
-	// read env variables
 	if err = viper.ReadInConfig(); err != nil {
 		return
 	}
 
-	// save env variables into config object
 	err = viper.Unmarshal(&config)
 	return
-}
-
-func Read() Config {
-	return config
 }

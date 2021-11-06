@@ -10,14 +10,15 @@ import (
 func main() {
 
 	// Load configuration settings.
-	if err := config.Load("."); err != nil {
+	config, err := config.LoadConfig(".")
+	if err != nil {
 		log.Fatal("Failed to load config: ", err)
 	}
 
 	// Connect to the database.
-	if err := db.Connect(); err != nil {
+	if err := db.Connect(config.DBDriver, config.DBSource); err != nil {
 		log.Fatal("Failed to connect to database: ", err)
 	}
 
-	server.Start()
+	server.Start(config.ServerAddress, config.GinMode)
 }

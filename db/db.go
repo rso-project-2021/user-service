@@ -2,7 +2,6 @@ package db
 
 import (
 	"log"
-	"user-service/config"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -10,16 +9,15 @@ import (
 
 var db *sqlx.DB
 
-func Connect() (err error) {
+func Connect(source, driver string) (err error) {
 
-	// connect to database
-	config := config.Read()
-	db, err = sqlx.Connect(config.DBDriver, config.DBSource)
+	// Connect to database.
+	db, err = sqlx.Connect(source, driver)
 	if err != nil {
 		return
 	}
 
-	// test database connection
+	// Test database connection.
 	if err = db.Ping(); err != nil {
 		return
 	}
