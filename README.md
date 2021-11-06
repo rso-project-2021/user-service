@@ -1,18 +1,18 @@
 # user-service
-![Build](https://github.com/rso-project-2021/user-service/actions/workflows/ci.yml/badge.svg)
+![Build](https://github.com/rso-project-2021/user-service/actions/workflows/ci.yml/badge.svg)  
 Microservice used for working with user data.
 
 ## Environment file
 In root of your local repository add `app.env` file.
 ```
 DB_DRIVER=postgres
-DB_SOURCE=postgres://root:password@localhost:5432/user_service?sslmode=disable
+DB_SOURCE=postgres://root:secret@localhost:5432/user_service?sslmode=disable
 SERVER_ADDRESS=0.0.0.0:8080
 GIN_MODE=debug
 ```
 
 ## Setup database
-1. Run `docker pull postgres` to download [postgres image](https://hub.docker.com/_/postgres).
+1. Run `docker pull postgres:alpine` to download [postgres image](https://hub.docker.com/_/postgres).
 2. Run `make postgres` to run postgres image inside of container.
 3. Run `make createdb` to create postgres database.
 4. Run `make migrateup` to add "users" table.
@@ -38,7 +38,7 @@ VALUES 	('Mario', 'passgancipass', 'ganci@gmail.com'),
 - [x] Makefile
 - [ ] API unit tests
 - [ ] Health checks
-- [ ] Docker file
+- [x] Docker file
 - [ ] CI/CD github actions
 - [ ] Dockerhub
 - [ ] AWS account
