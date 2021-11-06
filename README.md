@@ -1,4 +1,5 @@
 # user-service
+![Build](https://github.com/rso-project-2021/user-service/actions/workflows/ci.yml/badge.svg)
 Microservice used for working with user data.
 
 ## Environment file
