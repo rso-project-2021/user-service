@@ -1,4 +1,4 @@
-package models
+package db
 
 import (
 	"context"
@@ -10,8 +10,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-var user = new(User)
-
 func createRandomUser(t *testing.T) User {
 	arg := CreateUserParam{
 		Username: util.RandomString(5),
@@ -19,7 +17,7 @@ func createRandomUser(t *testing.T) User {
 		Email:    util.RandomEmail(),
 	}
 
-	result, err := user.Create(context.Background(), arg)
+	result, err := testStore.CreateUser(context.Background(), arg)
 
 	// Check if method executed correctly.
 	require.NoError(t, err)
@@ -41,7 +39,7 @@ func TestCreateUser(t *testing.T) {
 
 func TestGetUser(t *testing.T) {
 	user1 := createRandomUser(t)
-	user2, err := user.GetByID(context.Background(), user1.ID)
+	user2, err := testStore.GetUserByID(context.Background(), user1.ID)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, user2)
@@ -68,7 +66,7 @@ func TestListUsers(t *testing.T) {
 	}
 
 	// Retrieve list of users.
-	users, err := user.GetAll(context.Background(), arg)
+	users, err := testStore.GetAllUsers(context.Background(), arg)
 	require.NoError(t, err)
 	require.NotEmpty(t, users)
 
@@ -86,7 +84,7 @@ func TestUpdateUser(t *testing.T) {
 		Email:    util.RandomEmail(),
 	}
 
-	user2, err := user.Update(context.Background(), arg, user1.ID)
+	user2, err := testStore.UpdateUser(context.Background(), arg, user1.ID)
 	require.NoError(t, err)
 	require.NotEmpty(t, user2)
 
@@ -99,10 +97,10 @@ func TestUpdateUser(t *testing.T) {
 
 func TestDeleteUser(t *testing.T) {
 	user1 := createRandomUser(t)
-	err := user.Delete(context.Background(), user1.ID)
+	err := testStore.DeleteUser(context.Background(), user1.ID)
 	require.NoError(t, err)
 
-	user2, err := user.GetByID(context.Background(), user1.ID)
+	user2, err := testStore.GetUserByID(context.Background(), user1.ID)
 	require.EqualError(t, err, sql.ErrNoRows.Error())
 	require.Empty(t, user2)
 }

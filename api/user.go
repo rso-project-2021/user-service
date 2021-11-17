@@ -1,8 +1,8 @@
-package controllers
+package api
 
 import (
 	"net/http"
-	"user-service/models"
+	"user-service/db"
 
 	"github.com/gin-gonic/gin"
 )
@@ -30,9 +30,7 @@ type updateUserRequest struct {
 	Email    string `json:"email" binding:"required"`
 }
 
-var user = new(models.User)
-
-func (uc UserController) GetByID(ctx *gin.Context) {
+func (server *Server) GetUserByID(ctx *gin.Context) {
 
 	// Check if request has ID field in URI.
 	var req getUserRequest
@@ -43,7 +41,7 @@ func (uc UserController) GetByID(ctx *gin.Context) {
 	}
 
 	// Execute query.
-	result, err := user.GetByID(ctx, req.ID)
+	result, err := server.store.GetUserByID(ctx, req.ID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err})
 		ctx.Abort()
@@ -53,7 +51,7 @@ func (uc UserController) GetByID(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, result)
 }
 
-func (uc UserController) GetAll(ctx *gin.Context) {
+func (server *Server) GetAllUsers(ctx *gin.Context) {
 
 	// Check if request has parameters offset and limit for pagination.
 	var req getUserListRequest
@@ -63,13 +61,13 @@ func (uc UserController) GetAll(ctx *gin.Context) {
 		return
 	}
 
-	arg := models.ListUserParam{
+	arg := db.ListUserParam{
 		Offset: req.Offset,
 		Limit:  req.Limit,
 	}
 
 	// Execute query.
-	result, err := user.GetAll(ctx, arg)
+	result, err := server.store.GetAllUsers(ctx, arg)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err})
 		ctx.Abort()
@@ -79,7 +77,7 @@ func (uc UserController) GetAll(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, result)
 }
 
-func (uc UserController) Create(ctx *gin.Context) {
+func (server *Server) CreateUser(ctx *gin.Context) {
 
 	// Check if request has all required fields in json body.
 	var req createUserRequest
@@ -89,14 +87,14 @@ func (uc UserController) Create(ctx *gin.Context) {
 		return
 	}
 
-	arg := models.CreateUserParam{
+	arg := db.CreateUserParam{
 		Username: req.Username,
 		Password: req.Password,
 		Email:    req.Email,
 	}
 
 	// Execute query.
-	result, err := user.Create(ctx, arg)
+	result, err := server.store.CreateUser(ctx, arg)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err})
 		ctx.Abort()
@@ -106,7 +104,7 @@ func (uc UserController) Create(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, result)
 }
 
-func (uc UserController) Update(ctx *gin.Context) {
+func (server *Server) UpdateUser(ctx *gin.Context) {
 
 	// Check if request has ID field in URI.
 	var reqID getUserRequest
@@ -124,14 +122,14 @@ func (uc UserController) Update(ctx *gin.Context) {
 		return
 	}
 
-	arg := models.UpdateUserParam{
+	arg := db.UpdateUserParam{
 		Username: req.Username,
 		Password: req.Password,
 		Email:    req.Email,
 	}
 
 	// Execute query.
-	result, err := user.Update(ctx, arg, reqID.ID)
+	result, err := server.store.UpdateUser(ctx, arg, reqID.ID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err})
 		ctx.Abort()
@@ -141,7 +139,7 @@ func (uc UserController) Update(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, result)
 }
 
-func (uc UserController) Delete(ctx *gin.Context) {
+func (server *Server) DeleteUser(ctx *gin.Context) {
 
 	// Check if request has ID field in URI.
 	var req getUserRequest
@@ -152,7 +150,7 @@ func (uc UserController) Delete(ctx *gin.Context) {
 	}
 
 	// Execute query.
-	if err := user.Delete(ctx, req.ID); err != nil {
+	if err := server.store.DeleteUser(ctx, req.ID); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err})
 		ctx.Abort()
 		return

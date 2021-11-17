@@ -1,9 +1,8 @@
-package models
+package db
 
 import (
 	"context"
 	"time"
-	"user-service/db"
 )
 
 type User struct {
@@ -31,34 +30,31 @@ type ListUserParam struct {
 	Limit  int32
 }
 
-func (u User) GetByID(ctx context.Context, id int64) (user User, err error) {
-	db := db.GetDB()
+func (store *Store) GetUserByID(ctx context.Context, id int64) (user User, err error) {
 
 	const query = `SELECT * FROM "users" WHERE "user_id" = $1`
-	err = db.GetContext(ctx, &user, query, id)
+	err = store.db.GetContext(ctx, &user, query, id)
 
 	return
 }
 
-func (u User) GetAll(ctx context.Context, arg ListUserParam) (users []User, err error) {
-	db := db.GetDB()
+func (store *Store) GetAllUsers(ctx context.Context, arg ListUserParam) (users []User, err error) {
 
 	const query = `SELECT * FROM "users" OFFSET $1 LIMIT $2`
 	users = []User{}
-	err = db.SelectContext(ctx, &users, query, arg.Offset, arg.Limit)
+	err = store.db.SelectContext(ctx, &users, query, arg.Offset, arg.Limit)
 
 	return
 }
 
-func (u User) Create(ctx context.Context, arg CreateUserParam) (User, error) {
-	db := db.GetDB()
+func (store *Store) CreateUser(ctx context.Context, arg CreateUserParam) (User, error) {
 
 	const query = `
 	INSERT INTO "users"("username", "password", "email") 
 	VALUES ($1, $2, $3)
 	RETURNING "user_id", "username", "password", "email", "created_at"
 	`
-	row := db.QueryRowContext(ctx, query, arg.Username, arg.Password, arg.Email)
+	row := store.db.QueryRowContext(ctx, query, arg.Username, arg.Password, arg.Email)
 
 	var user User
 	err := row.Scan(
@@ -72,8 +68,7 @@ func (u User) Create(ctx context.Context, arg CreateUserParam) (User, error) {
 	return user, err
 }
 
-func (u User) Update(ctx context.Context, arg UpdateUserParam, id int64) (User, error) {
-	db := db.GetDB()
+func (store *Store) UpdateUser(ctx context.Context, arg UpdateUserParam, id int64) (User, error) {
 
 	const query = `
 	UPDATE "users"
@@ -83,7 +78,7 @@ func (u User) Update(ctx context.Context, arg UpdateUserParam, id int64) (User, 
 	WHERE "user_id" = $1
 	RETURNING "user_id", "username", "password", "email", "created_at"
 	`
-	row := db.QueryRowContext(ctx, query, id, arg.Username, arg.Password, arg.Email)
+	row := store.db.QueryRowContext(ctx, query, id, arg.Username, arg.Password, arg.Email)
 
 	var user User
 	err := row.Scan(
@@ -97,14 +92,13 @@ func (u User) Update(ctx context.Context, arg UpdateUserParam, id int64) (User, 
 	return user, err
 }
 
-func (u User) Delete(ctx context.Context, id int64) error {
-	db := db.GetDB()
+func (store *Store) DeleteUser(ctx context.Context, id int64) error {
 
 	const query = `
 	DELETE FROM users
 	WHERE "user_id" = $1
 	`
-	_, err := db.ExecContext(ctx, query, id)
+	_, err := store.db.ExecContext(ctx, query, id)
 
 	return err
 }
