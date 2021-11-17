@@ -39,6 +39,8 @@ VALUES 	('Mario', 'passgancipass', 'ganci@gmail.com'),
 - [ ] API unit tests
 - [ ] Health checks
 - [x] Docker file
-- [ ] CI/CD github actions
+- [x] CI github actions
+- [ ] Config server (dynamic configuration)
 - [ ] Dockerhub
 - [ ] AWS account
+- [ ] CD github actions
