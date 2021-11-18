@@ -19,15 +19,14 @@ func Connect(source, driver string) (*Store, error) {
 		return nil, err
 	}
 
-	// Test database connection.
-	if err := db.Ping(); err != nil {
-		return nil, err
-	}
-
 	store := &Store{
 		db: db,
 	}
 
 	log.Println("Connected to database!")
 	return store, err
+}
+
+func (store *Store) PingDB() error {
+	return store.db.Ping()
 }

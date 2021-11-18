@@ -33,13 +33,12 @@ func NewServer(config config.Config, store *db.Store) (*Server, error) {
 		v1.DELETE("/users/:id", server.DeleteUser)
 	}
 
-	/*
-		health := router.Group("health")
-		{
-			health.GET("/live", _______)
-			health.GET("/ready", _______)
-		}
-	*/
+	// Setup health check routes.
+	health := router.Group("health")
+	{
+		health.GET("/live", server.Live)
+		health.GET("/ready", server.Ready)
+	}
 
 	server.router = router
 	return server, nil
