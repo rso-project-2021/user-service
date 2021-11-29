@@ -84,3 +84,4 @@ Temporary Items
 
 # Custom added
 *.env
+config.json

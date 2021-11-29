@@ -5,6 +5,7 @@ import (
 	"user-service/db"
 
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 type Server struct {
@@ -15,13 +16,13 @@ type Server struct {
 
 func NewServer(config config.Config, store *db.Store) (*Server, error) {
 
+	gin.SetMode(config.GinMode)
+	router := gin.Default()
+
 	server := &Server{
 		config: config,
 		store:  store,
 	}
-
-	router := gin.Default()
-	gin.SetMode(config.GinMode)
 
 	// Setup routing for server.
 	v1 := router.Group("v1")
@@ -38,6 +39,15 @@ func NewServer(config config.Config, store *db.Store) (*Server, error) {
 	{
 		health.GET("/live", server.Live)
 		health.GET("/ready", server.Ready)
+	}
+
+	// Setup metrics routes.
+	metrics := router.Group("metrics")
+	{
+		metrics.GET("/", func(ctx *gin.Context) {
+			handler := promhttp.Handler()
+			handler.ServeHTTP(ctx.Writer, ctx.Request)
+		})
 	}
 
 	server.router = router
