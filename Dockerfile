@@ -15,6 +15,7 @@ COPY config.json .
 COPY start.sh .
 COPY wait-for.sh .
 COPY db/migration ./migration
+RUN apk add --no-cache jq
 
 EXPOSE 8080
 CMD [ "/app/main" ]
