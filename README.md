@@ -3,12 +3,14 @@
 Microservice used for working with user data.
 
 ## Environment file
-In root of your local repository add `app.env` file.
+In root of your local repository add `config.json` file.
 ```
-DB_DRIVER=postgres
-DB_SOURCE=postgres://root:secret@localhost:5432/user_service?sslmode=disable
-SERVER_ADDRESS=0.0.0.0:8080
-GIN_MODE=debug
+{
+    "db_driver" : "postgres",
+    "db_source": "postgres://root:secret@localhost:5432/user_service?sslmode=disable",
+    "server_address": "0.0.0.0:8080",
+    "gin_mode": "debug"
+}
 ```
 
 ## Setup database
@@ -19,7 +21,7 @@ GIN_MODE=debug
 5. Run `go mod tidy` to clean golang package dependecies.
 6. Test project with command `make test`.
 7. Run service with `go run .`.
-8. Use [PostMan](https://www.postman.com/) to send query to `http://localhost:8080/v1/users/1`.
+8. Use [PostMan](https://www.postman.com/) to send query to `http://localhost:8080/v1/users/`.
 
 ## Seed database
 Populate database with some users. You can run this query in [TablePlus](https://tableplus.com/).
@@ -37,10 +39,14 @@ VALUES 	('Mario', 'passgancipass', 'ganci@gmail.com'),
 - [x] CRUD unit tests
 - [x] Makefile
 - [ ] API unit tests
-- [ ] Health checks
+- [x] Health checks
 - [x] Docker file
 - [x] CI github actions
 - [ ] Config server (dynamic configuration)
-- [ ] Dockerhub
-- [ ] AWS account
+- [x] Dockerhub
+- [x] AWS account
+	+ email: `jure.vito@gmail.com`
+	+ password: `Jurerso100`
+- [ ] Kubernetes cluster in AWS
+- [x] Metrics ([Prometheus in Go](https://prometheus.io/docs/guides/go-application/))
 - [ ] CD github actions
