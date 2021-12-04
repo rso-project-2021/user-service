@@ -16,9 +16,9 @@ COPY start.sh .
 COPY wait-for.sh .
 COPY db/migration ./migration
 RUN apk add --no-cache jq
-RUN chmod +x /app/start.sh
-RUN chmod +x /app/wait-for.sh
+RUN chmod +x ./start.sh
+RUN chmod +x ./wait-for.sh
 
 EXPOSE 8080
 CMD [ "/app/main" ]
-ENTRYPOINT [ "bash" , "/app/start.sh" ]
+ENTRYPOINT [ "sh" , "/app/start.sh" ]
