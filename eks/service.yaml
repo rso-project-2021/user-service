@@ -3,10 +3,10 @@ kind: Service
 metadata:
   name: user-service-service
 spec:
-  selector:k
+  selector:
     app: user-service
   ports:
     - protocol: TCP
       port: 80
       targetPort: 8080
-  type: LoadBalancer
+  type: ClusterIP

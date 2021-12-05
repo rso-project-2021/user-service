@@ -21,4 +21,4 @@ RUN chmod +x ./wait-for.sh
 
 EXPOSE 8080
 CMD [ "/app/main" ]
-ENTRYPOINT [ "sh" , "/app/start.sh" ]
+ENTRYPOINT [ "/app/start.sh" ]
