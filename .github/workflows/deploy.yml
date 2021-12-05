@@ -41,7 +41,7 @@ jobs:
         tags: ${{ secrets.DOCKER_USERNAME }}/user-service:latest
     
     - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+      run: echo ${{ steps.docker_build.outputs.digest }}
 
     # Publish image to AWS.
     - name: Configure AWS credentials
