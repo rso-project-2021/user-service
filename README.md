@@ -1,6 +1,6 @@
 # user-service
 ![Build](https://github.com/rso-project-2021/user-service/actions/workflows/build.yml/badge.svg)
-![Deploy](https://github.com/rso-project-2021/user-service/actions/workflows/deploy.yml/badge.svg)
+![Deploy](https://github.com/rso-project-2021/user-service/actions/workflows/deploy.yml/badge.svg)  
 Microservice used for working with user data.
 
 ## Environment file
@@ -39,15 +39,13 @@ VALUES 	('Mario', 'passgancipass', 'ganci@gmail.com'),
 - [x] Database migrations
 - [x] CRUD unit tests
 - [x] Makefile
-- [ ] API unit tests
 - [x] Health checks
 - [x] Docker file
 - [x] CI github actions
-- [ ] Config server (dynamic configuration)
 - [x] Dockerhub
 - [x] AWS account
-	+ email: `jure.vito@gmail.com`
-	+ password: `Jurerso100`
-- [ ] Kubernetes cluster in AWS
+- [x] Kubernetes cluster in AWS
 - [x] Metrics ([Prometheus in Go](https://prometheus.io/docs/guides/go-application/))
-- [ ] CD github actions
+- [x] CD github actions
+- [ ] Config server (dynamic configuration)
+- [ ] API unit tests

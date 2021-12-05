@@ -20,6 +20,16 @@ jobs:
         echo '{"db_driver":"postgres","db_source":"${{ secrets.PROD_DB_CONNECTION }}","server_address":"0.0.0.0:8080","gin_mode":"debug"}' >> config.json
         cat config.json
 
+    # Publish image to Docker Hub.
+    - name: Publish to Docker Hub
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        repository: user-service
+        tags: latest
+
+    # Publish image to AWS.
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
