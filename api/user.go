@@ -7,8 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type UserController struct{}
-
 type getUserRequest struct {
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
