@@ -23,3 +23,10 @@ spec:
               name: user-service-service
               port:
                 number: 80
+        - path: /station-service(/|$)(.*)
+          pathType: Prefix
+          backend:
+            service:
+              name: station-service-service
+              port:
+                number: 80
