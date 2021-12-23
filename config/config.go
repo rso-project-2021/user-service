@@ -3,6 +3,7 @@ package config
 import (
 	"log"
 
+	"github.com/hashicorp/consul/api"
 	"github.com/spf13/viper"
 )
 
@@ -28,6 +29,47 @@ func New(path string) (config Config, err error) {
 	// Some small change
 	err = viper.Unmarshal(&config)
 
-	log.Println(config.GinMode)
 	return
+}
+
+func KeyWatcher(key string, handler func(source string)) {
+
+	// Get consul client.
+	config := api.DefaultConfig()
+	client, err := api.NewClient(config)
+	if err != nil {
+		log.Fatal("Error: ", err)
+	}
+
+	kv := client.KV()
+
+	// Read initial db source if exists.
+	pair, meta, err := kv.Get(key, nil)
+	if err != nil {
+		log.Panic("Unable to list keys", err)
+	}
+
+	if pair != nil {
+		handler(string(pair.Value))
+	}
+
+	options := api.QueryOptions{
+		RequireConsistent: true,
+	}
+
+	// In case consul configuration changes update
+	// database connection.
+	for {
+		options.WaitIndex = meta.LastIndex
+		pair, meta, err = kv.Get(key, &options)
+
+		if err != nil {
+			log.Panic("Unable to get key.", err)
+			return
+		}
+
+		if pair != nil {
+			handler(string(pair.Value))
+		}
+	}
 }

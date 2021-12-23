@@ -1,7 +1,7 @@
 package api
 
 import (
-	"user-service/config"
+	cnfg "user-service/config"
 	"user-service/db"
 
 	"github.com/gin-gonic/gin"
@@ -9,12 +9,12 @@ import (
 )
 
 type Server struct {
-	config config.Config
+	config cnfg.Config
 	store  *db.Store
 	router *gin.Engine
 }
 
-func NewServer(config config.Config, store *db.Store) (*Server, error) {
+func NewServer(config cnfg.Config, store *db.Store) (*Server, error) {
 
 	gin.SetMode(config.GinMode)
 	router := gin.Default()
@@ -55,5 +55,14 @@ func NewServer(config config.Config, store *db.Store) (*Server, error) {
 }
 
 func (server *Server) Start(address string) error {
+
+	// dynamic configuration with consul
+	go cnfg.KeyWatcher("DBSource", func(source string) {
+		store, err := db.Connect(server.config.DBDriver, source)
+		if err == nil {
+			server.store = store
+		}
+	})
+
 	return server.router.Run(address)
 }
