@@ -26,9 +26,25 @@ func New(path string) (config Config, err error) {
 		return
 	}
 
-	// Some small change
-	err = viper.Unmarshal(&config)
+	if err = viper.Unmarshal(&config); err != nil {
+		return
+	}
 
+	// Overwrite with consul value.
+	consulConfig := api.DefaultConfig()
+	client, err := api.NewClient(consulConfig)
+	if err != nil {
+		log.Fatal("Error: ", err)
+	}
+
+	kv := client.KV()
+
+	pair, _, err := kv.Get("db_source", nil)
+	if err == nil && pair != nil {
+		config.DBSource = string(pair.Value)
+	}
+
+	err = nil
 	return
 }
 
@@ -44,13 +60,9 @@ func KeyWatcher(key string, handler func(source string)) {
 	kv := client.KV()
 
 	// Read initial db source if exists.
-	pair, meta, err := kv.Get(key, nil)
+	_, meta, err := kv.Get(key, nil)
 	if err != nil {
-		log.Panic("Unable to list keys", err)
-	}
-
-	if pair != nil {
-		handler(string(pair.Value))
+		return
 	}
 
 	options := api.QueryOptions{
@@ -59,6 +71,7 @@ func KeyWatcher(key string, handler func(source string)) {
 
 	// In case consul configuration changes update
 	// database connection.
+	var pair *api.KVPair
 	for {
 		options.WaitIndex = meta.LastIndex
 		pair, meta, err = kv.Get(key, &options)

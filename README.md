@@ -8,7 +8,7 @@ In root of your local repository add `config.json` file.
 ```
 {
     "db_driver" : "postgres",
-    "db_source": "postgres://root:secret@localhost:5432/user_service?sslmode=disable",
+    "db_source": "postgres://root:secret@localhost:5432/electric_station?sslmode=disable",
     "server_address": "0.0.0.0:8080",
     "gin_mode": "debug"
 }
