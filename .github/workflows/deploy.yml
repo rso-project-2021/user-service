@@ -17,7 +17,7 @@ jobs:
     - name: Create config.json file
       run: |
         touch config.json
-        echo '{"db_driver":"postgres","db_source":"${{ secrets.PROD_DB_CONNECTION }}","server_address":"0.0.0.0:8080","gin_mode":"debug"}' >> config.json
+        echo '{"db_driver":"postgres","db_source":"${{ secrets.PROD_DB_CONNECTION }}","server_address":"0.0.0.0:8080","gin_mode":"release"}' >> config.json
         cat config.json
 
     # Publish image to Docker Hub.

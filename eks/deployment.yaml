@@ -5,7 +5,7 @@ metadata:
   labels:
     app: user-service
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: user-service
@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: user-service
-        image: 092356264921.dkr.ecr.eu-central-1.amazonaws.com/user-service:d651327269de64c26c013b6487dfa2aaf88b418f
+        image: 092356264921.dkr.ecr.eu-central-1.amazonaws.com/user-service:870c1a4e9ddadedfc50cf5398b0d0d4f54633abf
         ports:
         - containerPort: 8080
