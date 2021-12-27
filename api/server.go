@@ -3,6 +3,7 @@ package api
 import (
 	cnfg "user-service/config"
 	"user-service/db"
+	"user-service/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -18,6 +19,7 @@ func NewServer(config cnfg.Config, store *db.Store) (*Server, error) {
 
 	gin.SetMode(config.GinMode)
 	router := gin.Default()
+	router.Use(middleware.Logger(config.LogitAddress))
 
 	server := &Server{
 		config: config,

@@ -30,3 +30,24 @@ spec:
               name: station-service-service
               port:
                 number: 80
+        - path: /reservation-service(/|$)(.*)
+          pathType: Prefix
+          backend:
+            service:
+              name: reservation-service-service
+              port:
+                number: 80
+        - path: /rating-service(/|$)(.*)
+          pathType: Prefix
+          backend:
+            service:
+              name: rating-service-service
+              port:
+                number: 80
+        - path: /orchestra-service(/|$)(.*)
+          pathType: Prefix
+          backend:
+            service:
+              name: orchestra-service-service
+              port:
+                number: 80

@@ -8,6 +8,7 @@ import (
 )
 
 type Config struct {
+	LogitAddress  string `mapstructure:"logit_address"`
 	DBDriver      string `mapstructure:"db_driver"`
 	DBSource      string `mapstructure:"db_source"`
 	ServerAddress string `mapstructure:"server_address"`

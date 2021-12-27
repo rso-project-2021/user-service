@@ -3,11 +3,13 @@ module user-service
 go 1.17
 
 require (
+	github.com/bshuster-repo/logrus-logstash-hook v1.0.2
 	github.com/gin-gonic/gin v1.7.4
 	github.com/hashicorp/consul/api v1.12.0
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/lib/pq v1.10.3
 	github.com/prometheus/client_golang v1.11.0
+	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/viper v1.9.0
 	github.com/stretchr/testify v1.7.0
 )
