@@ -102,3 +102,20 @@ func (store *Store) DeleteUser(ctx context.Context, id int64) error {
 
 	return err
 }
+
+func (store *Store) GetUserByUsername(ctx context.Context, arg CreateUserParam) (User, error) {
+
+	const query = `SELECT * FROM "users" WHERE "username" = $1`
+	row := store.db.QueryRowContext(ctx, query, arg.Username)
+
+	var user User
+	err := row.Scan(
+		&user.ID,
+		&user.Username,
+		&user.Password,
+		&user.Email,
+		&user.CreatedAt,
+	)
+
+	return user, err
+}

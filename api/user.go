@@ -1,6 +1,7 @@
 package api
 
 import (
+	"database/sql"
 	"net/http"
 	"user-service/db"
 
@@ -26,6 +27,11 @@ type updateUserRequest struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 	Email    string `json:"email" binding:"required"`
+}
+
+type loginUserRequest struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 func (server *Server) GetUserByID(ctx *gin.Context) {
@@ -155,4 +161,45 @@ func (server *Server) DeleteUser(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusNoContent, nil)
+}
+
+func (server *Server) DefinitelyNotLogin(ctx *gin.Context) {
+
+	// Check if request has all required fields in json body.
+	var req loginUserRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": err})
+		ctx.Abort()
+		return
+	}
+
+	arg := db.CreateUserParam{
+		Username: req.Username,
+		Password: req.Password,
+	}
+
+	// Execute query.
+	result, err := server.store.GetUserByUsername(ctx, arg)
+	if err != nil {
+
+		// No user found.
+		if err == sql.ErrNoRows {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"message": err})
+			ctx.Abort()
+			return
+		}
+
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err})
+		ctx.Abort()
+		return
+	}
+
+	// Check if correct password is provided.
+	if result.Password != arg.Password {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": err})
+		ctx.Abort()
+		return
+	}
+
+	ctx.JSON(http.StatusOK, result)
 }

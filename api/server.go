@@ -32,6 +32,7 @@ func NewServer(config cnfg.Config, store *db.Store) (*Server, error) {
 		v1.POST("/users", server.CreateUser)
 		v1.PUT("/users/:id", server.UpdateUser)
 		v1.DELETE("/users/:id", server.DeleteUser)
+		v1.POST("/users/login", server.DefinitelyNotLogin)
 	}
 
 	// Setup health check routes.
