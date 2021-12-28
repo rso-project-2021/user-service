@@ -7,7 +7,9 @@ Microservice used for working with user data.
 In root of your local repository add `config.json` file.
 ```
 {
-    "db_driver" : "postgres",
+    "consul_address": "localhost:8500",
+    "logit_address": "5571bfef-c40a-4d84-a5dc-6b5dd6453ac0-ls.logit.io:24240",
+    "db_driver": "postgres",
     "db_source": "postgres://root:secret@localhost:5432/electric_station?sslmode=disable",
     "server_address": "0.0.0.0:8080",
     "gin_mode": "debug"
@@ -47,5 +49,5 @@ VALUES 	('Mario', 'passgancipass', 'ganci@gmail.com'),
 - [x] Kubernetes cluster in AWS
 - [x] Metrics ([Prometheus in Go](https://prometheus.io/docs/guides/go-application/))
 - [x] CD github actions
-- [ ] Config server (dynamic configuration)
+- [x] Config server (dynamic configuration)
 - [ ] API unit tests

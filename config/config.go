@@ -8,6 +8,7 @@ import (
 )
 
 type Config struct {
+	ConsulAddress string `mapstructure:"consul_address"`
 	LogitAddress  string `mapstructure:"logit_address"`
 	DBDriver      string `mapstructure:"db_driver"`
 	DBSource      string `mapstructure:"db_source"`
@@ -33,6 +34,7 @@ func New(path string) (config Config, err error) {
 
 	// Overwrite with consul value.
 	consulConfig := api.DefaultConfig()
+	consulConfig.Address = config.ConsulAddress
 	client, err := api.NewClient(consulConfig)
 	if err != nil {
 		log.Fatal("Error: ", err)
@@ -49,10 +51,11 @@ func New(path string) (config Config, err error) {
 	return
 }
 
-func KeyWatcher(key string, handler func(source string)) {
+func KeyWatcher(key, consulAddress string, handler func(source string)) {
 
 	// Get consul client.
 	config := api.DefaultConfig()
+	config.Address = consulAddress
 	client, err := api.NewClient(config)
 	if err != nil {
 		log.Fatal("Error: ", err)

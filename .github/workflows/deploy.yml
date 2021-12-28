@@ -17,7 +17,7 @@ jobs:
     - name: Create config.json file
       run: |
         touch config.json
-        echo '{"logit_address":"5571bfef-c40a-4d84-a5dc-6b5dd6453ac0-ls.logit.io:24240","db_driver":"postgres","db_source":"${{ secrets.PROD_DB_CONNECTION }}","server_address":"0.0.0.0:8080","gin_mode":"debug"}' >> config.json
+        echo '{"consul_address":"hashicorp-consul-server:8500","logit_address":"5571bfef-c40a-4d84-a5dc-6b5dd6453ac0-ls.logit.io:24240","db_driver":"postgres","db_source":"${{ secrets.PROD_DB_CONNECTION }}","server_address":"0.0.0.0:8080","gin_mode":"debug"}' >> config.json
         cat config.json
 
     # Publish image to Docker Hub.

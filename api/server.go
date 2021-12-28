@@ -60,7 +60,7 @@ func NewServer(config cnfg.Config, store *db.Store) (*Server, error) {
 func (server *Server) Start(address string) error {
 
 	// dynamic configuration with consul
-	go cnfg.KeyWatcher("db_source", func(source string) {
+	go cnfg.KeyWatcher("db_source", server.config.ConsulAddress, func(source string) {
 		store, err := db.Connect(server.config.DBDriver, source)
 		if err == nil {
 			server.store = store
