@@ -30,3 +30,7 @@ func Connect(driver, source string) (*Store, error) {
 func (store *Store) PingDB() error {
 	return store.db.Ping()
 }
+
+func (store *Store) Close() error {
+	return store.db.Close()
+}

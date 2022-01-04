@@ -50,7 +50,7 @@ jobs:
     - name: Create config.json file
       run: |
         touch config.json
-        echo '{"logit_address":"5571bfef-c40a-4d84-a5dc-6b5dd6453ac0-ls.logit.io:24240","db_driver":"postgres","db_source":"postgres://root:secret@localhost:5432/electric_station?sslmode=disable","server_address":"0.0.0.0:8080","gin_mode":"debug"}' >> config.json
+        echo '{"logit_address":"abd5d879-6c8b-4183-89c2-0708d284ea3b-ls.logit.io:18567","db_driver":"postgres","db_source":"postgres://root:secret@localhost:5432/electric_station?sslmode=disable","server_address":"0.0.0.0:8080","gin_mode":"debug"}' >> config.json
         cat config.json
     
     - name: Test
